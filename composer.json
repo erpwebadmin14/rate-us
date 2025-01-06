@@ -1,0 +1,11 @@
+{
+    "name": "root/rate-us2",
+    "autoload": {
+        "psr-4": {
+            "Root\\RateUs2\\": "src/"
+        }
+    },
+    "require": {
+        "google/apiclient": "^2.18"
+    }
+}

@@ -1,16 +1,34 @@
 <?php
-require __DIR__ . '/vendor/autoload.php';
-
-// Path to your service account key file
-$serviceAccountFile = '/var/www/php81/google-service-account-credentials.json';
-
-// Google Sheet ID and range
-$spreadsheetId = '1wEK7NcdKVdiMH__zAwc38M_JcpATuwCnrEiDyv2puGs'; // Replace with your Google Sheet ID
+require 'google.php';
 $range = 'Sheet1!A1:D1'; // Replace with your sheet name and range
 
 // Data to insert (each array represents a row)
+$type = 'Default';
+if (!empty(trim($_POST['q'])))
+    $type = strtoupper($_POST['q']);
+
+$rating = (int) $_POST['rate'];
+$timestamp = date('Y-m-d H:i:s');
+$comment = $_POST['comment'];
+$ip = $_SERVER['REMOTE_ADDR'];
+$userAgent = $_SERVER['HTTP_USER_AGENT'];
+
+if (strpos($userAgent, 'Chrome') !== false) {
+    $userAgent = 'Google Chrome';
+} elseif (strpos($userAgent, 'Firefox') !== false) {
+    $userAgent = 'Mozilla Firefox';
+} elseif (strpos($userAgent, 'MSIE') !== false || strpos($userAgent, 'Trident') !== false) {
+    $userAgent = 'Internet Explorer';
+} elseif (strpos($userAgent, 'Safari') !== false) {
+    $userAgent = 'Apple Safari';
+} elseif (strpos($userAgent, 'Opera') !== false || strpos($userAgent, 'OPR') !== false) {
+    $userAgent = 'Opera';
+} else {
+    $userAgent = 'Unknown Browser';
+}
+
 $newRow = [
-    [$_POST['q'], $_POST['rate'], date('Y-m-d H:i:s'), $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']]
+    [$type, $rating, $timestamp, $comment, $ip, $userAgent]
 ];
 
 try {

@@ -4,141 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rate Us!</title>
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        .container {
-            background-image: url("https://www.toptal.com/designers/subtlepatterns/patterns/concrete-texture.png");
-            display: flex;
-            flex-wrap: wrap;
-            height: 100vh;
-            align-items: center;
-            justify-content: center;
-            padding: 0 20px;
-        }
-
-        .rating {
-            display: flex;
-            width: 100%;
-            justify-content: center;
-            overflow: hidden;
-            flex-direction: row-reverse;
-            height: 150px;
-            position: relative;
-        }
-
-        .rating-0 {
-            filter: grayscale(100%);
-        }
-
-        .rating>input {
-            display: none;
-        }
-
-        .rating>label {
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            margin-top: auto;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='126.729' height='126.73'%3e%3cpath fill='%23e3e3e3' d='M121.215 44.212l-34.899-3.3c-2.2-.2-4.101-1.6-5-3.7l-12.5-30.3c-2-5-9.101-5-11.101 0l-12.4 30.3c-.8 2.1-2.8 3.5-5 3.7l-34.9 3.3c-5.2.5-7.3 7-3.4 10.5l26.3 23.1c1.7 1.5 2.4 3.7 1.9 5.9l-7.9 32.399c-1.2 5.101 4.3 9.3 8.9 6.601l29.1-17.101c1.9-1.1 4.2-1.1 6.1 0l29.101 17.101c4.6 2.699 10.1-1.4 8.899-6.601l-7.8-32.399c-.5-2.2.2-4.4 1.9-5.9l26.3-23.1c3.8-3.5 1.6-10-3.6-10.5z'/%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: 76%;
-            transition: 0.3s;
-        }
-
-        .rating>input:checked~label,
-        .rating>input:checked~label~label {
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='126.729' height='126.73'%3e%3cpath fill='%23fcd93a' d='M121.215 44.212l-34.899-3.3c-2.2-.2-4.101-1.6-5-3.7l-12.5-30.3c-2-5-9.101-5-11.101 0l-12.4 30.3c-.8 2.1-2.8 3.5-5 3.7l-34.9 3.3c-5.2.5-7.3 7-3.4 10.5l26.3 23.1c1.7 1.5 2.4 3.7 1.9 5.9l-7.9 32.399c-1.2 5.101 4.3 9.3 8.9 6.601l29.1-17.101c1.9-1.1 4.2-1.1 6.1 0l29.101 17.101c4.6 2.699 10.1-1.4 8.899-6.601l-7.8-32.399c-.5-2.2.2-4.4 1.9-5.9l26.3-23.1c3.8-3.5 1.6-10-3.6-10.5z'/%3e%3c/svg%3e");
-        }
-
-        .rating>input:not(:checked)~label:hover,
-        .rating>input:not(:checked)~label:hover~label {
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='126.729' height='126.73'%3e%3cpath fill='%23d8b11e' d='M121.215 44.212l-34.899-3.3c-2.2-.2-4.101-1.6-5-3.7l-12.5-30.3c-2-5-9.101-5-11.101 0l-12.4 30.3c-.8 2.1-2.8 3.5-5 3.7l-34.9 3.3c-5.2.5-7.3 7-3.4 10.5l26.3 23.1c1.7 1.5 2.4 3.7 1.9 5.9l-7.9 32.399c-1.2 5.101 4.3 9.3 8.9 6.601l29.1-17.101c1.9-1.1 4.2-1.1 6.1 0l29.101 17.101c4.6 2.699 10.1-1.4 8.899-6.601l-7.8-32.399c-.5-2.2.2-4.4 1.9-5.9l26.3-23.1c3.8-3.5 1.6-10-3.6-10.5z'/%3e%3c/svg%3e");
-        }
-
-        .emoji-wrapper {
-            width: 100%;
-            text-align: center;
-            height: 100px;
-            overflow: hidden;
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-
-        .emoji-wrapper:before,
-        .emoji-wrapper:after {
-            content: "";
-            height: 15px;
-            width: 100%;
-            position: absolute;
-            left: 0;
-            z-index: 1;
-        }
-
-        .emoji-wrapper:before {
-            top: 0;
-            background: linear-gradient(to bottom, white 0%, white 35%, rgba(255, 255, 255, 0) 100%);
-        }
-
-        .emoji-wrapper:after {
-            bottom: 0;
-            background: linear-gradient(to top, white 0%, white 35%, rgba(255, 255, 255, 0) 100%);
-        }
-
-        .emoji {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: 0.3s;
-        }
-
-        .emoji>svg {
-            margin: 15px 0;
-            width: 70px;
-            height: 70px;
-            flex-shrink: 0;
-        }
-
-        #rating-1:checked~.emoji-wrapper>.emoji {
-            transform: translateY(-100px);
-        }
-
-        #rating-2:checked~.emoji-wrapper>.emoji {
-            transform: translateY(-200px);
-        }
-
-        #rating-3:checked~.emoji-wrapper>.emoji {
-            transform: translateY(-300px);
-        }
-
-        #rating-4:checked~.emoji-wrapper>.emoji {
-            transform: translateY(-400px);
-        }
-
-        #rating-5:checked~.emoji-wrapper>.emoji {
-            transform: translateY(-500px);
-        }
-
-        .feedback {
-            max-width: 360px;
-            background-color: #fff;
-            width: 100%;
-            padding: 30px;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            flex-wrap: wrap;
-            align-items: center;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
-        }
-    </style>
+    <title>Employee Satisfaction Meter</title>
+    <link rel="stylesheet" href="style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -147,7 +17,6 @@
             <img src="meg35.png" alt="" style="width: 150px">
             <br>
             <h5 class="question">How would you rate us?</h5>
-            <h3 class="thanks">Thank you!</h3>
             <div class="rating">
                 <input type="radio" name="rating" id="rating-5" value="5">
                 <label for="rating-5"></label>
@@ -323,10 +192,12 @@
                 </div>
             </div>
             <br>
-            <button type="button" id="submit" class="btn btn-outline-primary">Submit Rating</button>
-            <button type="button" id="new" class="btn btn-outline-primary">New Rating</button>
+            <textarea name="comment" id="comment" class="form-control" row="4"
+                placeholder="Your feedback (optional)"></textarea>
             <br>
-            <a href="result.php" style="font-size: 9px">View result</a>
+            <button type="button" id="submit" class="btn btn-outline-primary">Submit Rating</button>
+            <br>
+            <a href="result.php">View result</a>
             <img src="3logo.png" alt="" style="width: 100%">
         </div>
     </div>
@@ -337,45 +208,70 @@
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
     <script>
-        $('.thanks').hide();
-        $('#new').hide();
+        $('#submit').prop('disabled', true);
+
         let rating = 5;
         $(document).on('click', 'input[name="rating"]', function () {
             rating = $(this).val();
+            $('#submit').prop('disabled', false);
         });
 
         $(document).on('click', '#submit', function () {
-            $.ajax({
-                type: "post",
-                url: "rater.php",
-                data: {
-                    q: '<?php echo $_GET['q']; ?>',
-                    rate: rating
-                },
-                success: function (response) {
-                    console.log(response);
-                    if (Number.isInteger(parseInt(response))) {
-                        $('#submit').hide();
-                        $('.rating').hide();
-                        $('.question').hide();
+            Swal.fire({
+                title: 'Sending...',
+                text: 'Thank you for your patience!',
+                icon: 'info',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                didOpen: () => {
+                    // Show loading spinner
+                    Swal.showLoading();
 
-                        $('#new').show();
-                        $('.thanks').show();
-                    } else {
-                        console.log('error');
-                    }
+                    $.ajax({
+                        type: "post",
+                        url: "rater.php",
+                        data: {
+                            q: '<?php echo $_GET['q']; ?>',
+                            rate: rating,
+                            comment: $('#comment').val()
+                        },
+                        success: function (response) {
+                            if (Number.isInteger(parseInt(response))) {
+                                Swal.fire({
+                                    title: 'Thank you!',
+                                    text: 'For additional feedback, you may send an email with your People Partner.',
+                                    icon: 'success',
+                                    confirmButtonText: 'Rate us again!',
+                                    allowOutsideClick: false,
+                                }).then((result) => {
+                                    $('#comment').val('');
+                                    $('input[type="radio"]').prop('checked', false);
+                                    $('#submit').prop('disabled', true);
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'Something went wrong and your rating was not submitted!',
+                                    icon: 'error',
+                                    confirmButtonText: 'Try again'
+                                });
+                            }
+                        }, error: function () {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong and your rating was not submitted!',
+                                icon: 'error',
+                                confirmButtonText: 'Try again'
+                            });
+                        }
+                    });
+
                 }
-            });
-
-            $(document).on('click', '#new', function () {
-                $('.question').show();
-                $('#submit').show();
-                $('#new').hide();
-                $('.thanks').hide();
-                $('.rating').show();
-                $('input[type="radio"]').prop('checked', false);
             })
+
         });
+
+
     </script>
 
 </body>

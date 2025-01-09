@@ -19,9 +19,9 @@ $(document).ready(function () {
     function updateChart(category = '', date = '') {
 
         container.empty(); // Clear existing charts
-        container.append(`<div class="col-xs-12 col-sm-12 col-md-6">
+        container.append(`<div class="col-xs-12 col-sm-12 col-md-4">
             <h4>Average Ratings</h4>
-            <canvas id="chart" height="200"></canvas>
+            <canvas id="chart"></canvas>
         </div>`);
 
         const ctx = document.getElementById('chart').getContext('2d');
@@ -80,6 +80,8 @@ $(document).ready(function () {
                         }]
                     },
                     options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
                         scales: {
                             y: {
                                 beginAtZero: true,
@@ -88,11 +90,18 @@ $(document).ready(function () {
                         },
                         plugins: {
                             legend: {
-                                display: false // Hide legend for simplicity
+                                display: true // Hide legend for simplicity
                             }
                         }
                     }
                 });
+
+                // Set the canvas size
+                document.getElementById('chart').style.maxHeight = '200px';
+                document.getElementById('chart').style.maxWidth = '300px';
+
+                document.getElementById('chart').style.minHeight = '200px';
+                document.getElementById('chart').style.minWidth = '200px';
 
                 // Populate the category filter dropdown
                 const categoryFilter = $('#category-filter');
@@ -127,15 +136,16 @@ $(document).ready(function () {
 
             // Create a new canvas for the category chart
             const canvasId = `chart-${category}`;
-            container.append(`<div class="col-xs-12 col-sm-12 col-md-6">
+            container.append(`<div class="col-xs-12 col-sm-12 col-md-4">
                 <h4>${category}</h4>
-                <canvas id="${canvasId}" height="200"></canvas>
+                <canvas id="${canvasId}"></canvas>
             </div>`);
 
             // Generate random colors for the bars
             const barColors = generateRandomColors(5);
 
             // Create the chart
+            // set chart size
             new Chart(document.getElementById(canvasId).getContext('2d'), {
                 type: 'bar',
                 data: {
@@ -149,6 +159,8 @@ $(document).ready(function () {
                     }]
                 },
                 options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         y: {
                             beginAtZero: true
@@ -169,6 +181,14 @@ $(document).ready(function () {
                     }
                 }
             });
+
+            // Set the canvas size
+            document.getElementById(canvasId).style.maxHeight = '200px';
+            document.getElementById(canvasId).style.maxWidth = '300px';
+
+            document.getElementById(canvasId).style.minHeight = '200px';
+            document.getElementById(canvasId).style.minWidth = '200px';
+
         });
     }
 

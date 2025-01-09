@@ -192,8 +192,8 @@
                 </div>
             </div>
             <br>
-            <textarea name="comment" id="comment" class="form-control" row="4"
-                placeholder="Your feedback (optional)"></textarea>
+            <textarea name="comment" id="comment" class="form-control" rows="4"
+                placeholder="Share with us your feedback"></textarea>
             <br>
             <button type="button" id="submit" class="btn btn-outline-primary">Submit Rating</button>
             <br>
@@ -208,47 +208,77 @@
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
     <script>
-        $('#submit').prop('disabled', true);
+        function valid() {
+            if ($('input[name="rating"]:checked').length == 0) {
+                Swal.fire({
+                    title: 'Your Rating is required.',
+                    text: 'Please select a rating!',
+                    icon: 'info',
+                    confirmButtonText: 'OK'
+                });
+                return false;
+            }
+
+            let comment = $('#comment').val();
+            if ($('#comment').val().length < 5) {
+                Swal.fire({
+                    title: 'Your feedback will help us improve.',
+                    text: 'Please provide a feedback with 5 or more characters!',
+                    icon: 'info',
+                    confirmButtonText: 'OK'
+                });
+                return false;
+            }
+
+            return true;
+        }
 
         let rating = 5;
         $(document).on('click', 'input[name="rating"]', function () {
             rating = $(this).val();
-            $('#submit').prop('disabled', false);
         });
 
         $(document).on('click', '#submit', function () {
-            Swal.fire({
-                title: 'Sending...',
-                text: 'Thank you for your patience!',
-                icon: 'info',
-                allowOutsideClick: false,
-                showConfirmButton: false,
-                didOpen: () => {
-                    // Show loading spinner
-                    Swal.showLoading();
+            if (valid())
+                Swal.fire({
+                    title: 'Sending...',
+                    text: 'Thank you for your patience!',
+                    icon: 'info',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        // Show loading spinner
+                        Swal.showLoading();
 
-                    $.ajax({
-                        type: "post",
-                        url: "rater.php",
-                        data: {
-                            q: '<?php echo $_GET['q']; ?>',
-                            rate: rating,
-                            comment: $('#comment').val()
-                        },
-                        success: function (response) {
-                            if (Number.isInteger(parseInt(response))) {
-                                Swal.fire({
-                                    title: 'Thank you!',
-                                    text: 'For additional feedback, you may send an email with your People Partner.',
-                                    icon: 'success',
-                                    confirmButtonText: 'Rate us again!',
-                                    allowOutsideClick: false,
-                                }).then((result) => {
-                                    $('#comment').val('');
-                                    $('input[type="radio"]').prop('checked', false);
-                                    $('#submit').prop('disabled', true);
-                                });
-                            } else {
+                        $.ajax({
+                            type: "post",
+                            url: "rater.php",
+                            data: {
+                                q: '<?php echo $_GET['q']; ?>',
+                                rate: rating,
+                                comment: $('#comment').val()
+                            },
+                            success: function (response) {
+                                if (Number.isInteger(parseInt(response))) {
+                                    Swal.fire({
+                                        title: 'We appreciate your feedback!',
+                                        text: 'For additional feedback, you may send an email with your People Partner.',
+                                        icon: 'success',
+                                        confirmButtonText: 'Rate us again!',
+                                        allowOutsideClick: false,
+                                    }).then((result) => {
+                                        $('#comment').val('');
+                                        $('input[type="radio"]').prop('checked', false);
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: 'Something went wrong and your rating was not submitted!',
+                                        icon: 'error',
+                                        confirmButtonText: 'Try again'
+                                    });
+                                }
+                            }, error: function () {
                                 Swal.fire({
                                     title: 'Error!',
                                     text: 'Something went wrong and your rating was not submitted!',
@@ -256,18 +286,10 @@
                                     confirmButtonText: 'Try again'
                                 });
                             }
-                        }, error: function () {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'Something went wrong and your rating was not submitted!',
-                                icon: 'error',
-                                confirmButtonText: 'Try again'
-                            });
-                        }
-                    });
+                        });
 
-                }
-            })
+                    }
+                })
 
         });
 

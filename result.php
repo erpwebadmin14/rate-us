@@ -37,8 +37,8 @@
                 </div>
                 <div class="col-12">
                     <div id="charts" class="row">
-                        <div class="col-xs-12 col-sm-12 col-md-6">
-                            <canvas id="chart" height="200"></canvas>
+                        <div class="col-xs-12 col-sm-12 col-md-4">
+                            <canvas id="chart"></canvas>
                         </div>
                     </div>
                 </div>

@@ -21,6 +21,7 @@ $(document).ready(function () {
         container.empty(); // Clear existing charts
         container.append(`<div class="col-xs-12 col-sm-12 col-md-4">
             <h4>Average Ratings</h4>
+            <span id="totalratings"></span>
             <canvas id="chart"></canvas>
         </div>`);
 
@@ -32,7 +33,6 @@ $(document).ready(function () {
             success: function (response) {
                 // Parse the response
                 const data = (response);
-
                 // Extract unique dates
                 const uniqueDates = [...new Set(data.map(item => item.timestamp.split('T')[0]))].sort();
 
@@ -54,6 +54,8 @@ $(document).ready(function () {
                     const matchesDate = date === '' || item.timestamp.startsWith(date);
                     return matchesCategory && matchesDate;
                 });
+
+                $('#totalratings').text(`${filteredData.length} Total Ratings`);
 
                 // Aggregate data for the chart
                 const categories = [...new Set(filteredData.map(item => item.category))];
@@ -137,7 +139,8 @@ $(document).ready(function () {
             // Create a new canvas for the category chart
             const canvasId = `chart-${category}`;
             container.append(`<div class="col-xs-12 col-sm-12 col-md-4">
-                <h4>${category}</h4>
+                <h4>${category} </h4>
+                <span>${categoryData.length} Total Ratings</span>
                 <canvas id="${canvasId}"></canvas>
             </div>`);
 

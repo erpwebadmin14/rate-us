@@ -1,16 +1,20 @@
 <?php
 require 'google.php';
-$range = 'Sheet1!A1:D1'; // Replace with your sheet name and range
+$range = 'Sheet1!A2:J2'; // Replace with your sheet name and range
 
 // Data to insert (each array represents a row)
-$type = 'Default';
-if (!empty(trim($_POST['q'])))
-    $type = strtoupper($_POST['q']);
+$category = 'Default';
+if (!empty(trim($_POST['c'])))
+    $category = strtoupper($_POST['c']); 
 
+$floor = (int) $_POST['f'];
+$office = $_POST['o'];
+$gender = $_POST['g'];
+$type = $_POST['t'];
 $rating = (int) $_POST['rate'];
-$timestamp = date('Y-m-d H:i:s');
-$comment = $_POST['comment'];
-$ip = $_SERVER['REMOTE_ADDR'];
+$date = date('m/d/Y');
+$time = date('H:i:s');
+$comment = strtoupper($_POST['comment']);
 $userAgent = $_SERVER['HTTP_USER_AGENT'];
 
 if (strpos($userAgent, 'Chrome') !== false) {
@@ -27,8 +31,26 @@ if (strpos($userAgent, 'Chrome') !== false) {
     $userAgent = 'Unknown Browser';
 }
 
+if($gender = 'F'){
+    $gender = 'Female';
+} elseif ($gender = 'M'){
+    $gender = 'Male';
+} elseif ($gender = 'P'){
+    $gender = 'PWD';
+} else {
+    $gender = 'Unknown';
+}
+
+if($type = 'E'){
+    $type = 'Employees CR';
+} elseif ($type = 'C') {
+    $type = 'Clients CR';
+} elseif ($type = 'V'){
+    $type = 'Visitors CR';
+} 
+
 $newRow = [
-    [$type, $rating, $timestamp, $comment, $ip, $userAgent]
+    [$category, $office, $floor, $gender, $type, $rating, $comment, $date, $time, $userAgent]
 ];
 
 try {
@@ -37,7 +59,7 @@ try {
     $client->setApplicationName('Google Sheets API PHP Quickstart');
     $client->setScopes(Google_Service_Sheets::SPREADSHEETS);
     $client->setAuthConfig($serviceAccountFile);
-
+    
     // Initialize Google Sheets Service
     $service = new Google_Service_Sheets($client);
 

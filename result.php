@@ -19,37 +19,84 @@
 <body>
     <div class="container" style="width: 100% !important;">
         <div class="feedback" style="max-width: 100% !important;">
-            <img src="meg35.png" alt="" style="width: 150px">
+            <img src="meg.png" alt="" style="width: 150px">
             <br>
             <h5 class="question">Results</h5>
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-6">
-                    <label for="category-filter">Filter by Category:</label>
-                    <select id="category-filter" class="form-control input-xs">
-                        <option value="">All Categories</option>
+            <div class="row mb-2">
+                <div class="col-sm-2">
+                    <select id="office-filter" class="form-control">
+                        <option value="">All Offices</option>
                     </select>
                 </div>
-                <div class="col-xs-12 col-sm-12 col-md-6">
-                    <label for="date-filter">Filter by Date:</label>
-                    <select id="date-filter" class="form-control">
-                        <option value="">All Dates</option>
+                <div class="col-sm-2">
+                    <select id="floor-filter" class="form-control">
+                        <option value="">All Floors</option>
                     </select>
                 </div>
-                <div class="col-12">
-                    <div id="charts" class="row">
-                        <div class="col-xs-12 col-sm-12 col-md-4">
-                            <canvas id="chart"></canvas>
+                <div class="col-sm-2">
+                    <select id="restroom_type-filter" class="form-control">
+                        <option value="">Restroom type</option>
+                    </select>
+                </div>
+                <div class="col-sm-2">
+                    <select id="restroom_category-filter" class="form-control">
+                        <option value="">Restroom category</option>
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <div class="d-flex">
+                        <input type="text" id="date-start" class="form-control me-2" placeholder="Start Date"
+                            onfocus="(this.type='date')" onblur="(this.type='text')" />
+                        <input type="text" id="date-end" class="form-control" placeholder="End Date"
+                            onfocus="(this.type='date')" onblur="(this.type='text')" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="col-4 d-flex mb-2">
+                    <div class="card text-center mx-2"
+                        style="width: 180px; border: 1px solid #ddd; box-shadow: 2px 2px 10px rgba(0,0,0,0.1);">
+                        <div class="card-body">
+                            <h6 class="text-muted">Record Count</h6>
+                            <h3 id="record-count">0</h3>
+                        </div>
+                    </div>
+                    <div class="card text-center mx-2"
+                        style="width: 180px; border: 1px solid #ddd; box-shadow: 2px 2px 10px rgba(0,0,0,0.1);">
+                        <div class="card-body">
+                            <h6 class="text-muted">Average Rating</h6>
+                            <h3 id="average-rating">0</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 d-flex mb-2">
+                    <div class="card text-center mx-2"
+                        style="width: 180px; border: 1px solid #ddd; box-shadow: 2px 2px 10px rgba(0,0,0,0.1);">
+                        <div class="card-body">
+                            <h6 class="text-muted">% of Negative Ratings</h6>
+                            <h3 id="negative-rating">0</h3>
+                        </div>
+                    </div>
+                    <div class="card text-center mx-2"
+                        style="width: 180px; border: 1px solid #ddd; box-shadow: 2px 2px 10px rgba(0,0,0,0.1);">
+                        <div class="card-body">
+                            <h6 class="text-muted">% of Positive Ratings</h6>
+                            <h3 id="positive-rating">0</h3>
                         </div>
                     </div>
                 </div>
             </div>
-            <a href="javascript:window.history.go(-1);">Back</a>
-            <img src="3logo.png" alt="" style="width: 300px">
+            <div class="col-12">
+                <div id="charts" class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-4">
+                        <canvas id="chart"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
-
     <script src="ratings.js"></script>
+
 </body>
 
 </html>

@@ -1,29 +1,30 @@
 $(document).ready(function () {
     let chart;
 
-    function generateRandomColors(count) {
-        const colors = [];
-        for (let i = 0; i < count; i++) {
-            const r = Math.floor(Math.random() * 256);
-            const g = Math.floor(Math.random() * 256);
-            const b = Math.floor(Math.random() * 256);
-            colors.push(`rgba(${r}, ${g}, ${b}, 0.5)`); // Semi-transparent fill
-        }
-        return colors;
-    }
-
     const container = $('#charts');
     container.empty(); // Clear existing charts
 
-    // Function to fetch data and update the chart
-    function updateChart(category = '', date = '') {
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+        const day = String(date.getDate()).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${month}/${day}/${year}`;
+    }
 
+    // Function to fetch data and update the chart
+    function updateChart(category = '', startDate = '', endDate = '', office = '', floor = '') {
+
+        const container = $('#charts');
         container.empty(); // Clear existing charts
-        container.append(`<div class="col-xs-12 col-sm-12 col-md-4">
-            <h4>Average Ratings</h4>
-            <span id="totalratings"></span>
-            <canvas id="chart"></canvas>
-        </div>`);
+
+        container.append(`
+            <div class="col-xs-12 col-sm-12 col-md-4">
+                <h4>Average Ratings</h4>
+                <span id="totalratings"></span>
+                <canvas id="chart"></canvas>
+            </div>
+        `);
 
         const ctx = document.getElementById('chart').getContext('2d');
 
@@ -36,24 +37,30 @@ $(document).ready(function () {
                 // Extract unique dates
                 const uniqueDates = [...new Set(data.map(item => item.timestamp.split('T')[0]))].sort();
 
-                // Populate the date filter dropdown
-                const dateFilter = $('#date-filter');
-                const selectedDate = dateFilter.val();
-                dateFilter.empty();
-                dateFilter.append('<option value="">All Dates</option>');
-                uniqueDates.forEach(date => {
-                    if (selectedDate == date)
-                        dateFilter.append(`<option value="${date}" selected>${date}</option>`);
-                    else
-                        dateFilter.append(`<option value="${date}">${date}</option>`);
-                });
+                // Set the minimum date as the start date if not already set
+                if (!startDate && uniqueDates.length > 0) {
+                    startDate = formatDate(uniqueDates[0]); // Set the earliest date
+                    $('#date-start').val(startDate); // Update the start date filter
+                }
 
                 // Filter data based on category and date
                 const filteredData = data.filter(item => {
-                    const matchesCategory = category === '' || item.category === category;
-                    const matchesDate = date === '' || item.timestamp.startsWith(date);
-                    return matchesCategory && matchesDate;
+                    const itemDate = item.timestamp.split('T')[0];
+                    return (
+                        (category === '' || item.category === category) &&
+                        (startDate === '' || itemDate >= startDate) &&
+                        (endDate === '' || itemDate <= endDate) &&
+                        (office === '' || item.office === office) &&
+                        (floor === '' || item.floor === floor)
+                    );
                 });
+
+                const totalRecords = filteredData.length;
+                const totalRatingSum = filteredData.reduce((sum, item) => sum + item.rating, 0);
+                const averageRating = totalRecords > 0 ? (totalRatingSum / totalRecords).toFixed(2) : "N/A";
+
+                $('#record-count').text(totalRecords);
+                $('#average-rating').text(averageRating);
 
                 $('#totalratings').text(`${filteredData.length} Total Ratings`);
 
@@ -65,8 +72,6 @@ $(document).ready(function () {
                     return avgRating.toFixed(2); // Average rating per category
                 });
 
-                const barColors = generateRandomColors(categories.length);
-
                 // Update the chart
                 if (chart) chart.destroy();
                 chart = new Chart(ctx, {
@@ -76,8 +81,9 @@ $(document).ready(function () {
                         datasets: [{
                             label: 'Average Rating',
                             data: ratings,
-                            backgroundColor: barColors,
-                            borderColor: barColors.map(color => color.replace('0.5', '1')),
+                            backgroundColor:
+                                "rgba(20, 27, 236, 0.5)",
+                            borderColor: "#0056b3",
                             borderWidth: 1
                         }]
                     },
@@ -99,26 +105,17 @@ $(document).ready(function () {
                 });
 
                 // Set the canvas size
-                document.getElementById('chart').style.maxHeight = '200px';
-                document.getElementById('chart').style.maxWidth = '300px';
-
-                document.getElementById('chart').style.minHeight = '200px';
-                document.getElementById('chart').style.minWidth = '200px';
+                Object.assign(document.getElementById('chart').style, {
+                    maxHeight: '250px', minHeight: '200px', maxWidth: '350px', minWidth: '250px'
+                });
 
                 // Populate the category filter dropdown
                 const categoryFilter = $('#category-filter');
-                const selectedCategory = categoryFilter.val();
-                categoryFilter.empty();
-                categoryFilter.append('<option value="">All Categories</option>');
-                categories.forEach(cat => {
-                    if (selectedCategory == cat)
-                        categoryFilter.append(`<option value="${cat}" selected>${cat}</option>`);
-                    else
-                        categoryFilter.append(`<option value="${cat}">${cat}</option>`);
-                });
+                categoryFilter.empty().append('<option value="">All Categories</option>');
+                categories.forEach(cat => categoryFilter.append(`<option value="${cat}" ${category === cat ? 'selected' : ''}>${cat}</option>`));
 
                 // Generate category-specific charts
-                generateCategoryCharts(filteredData, categories);
+                generateCategoryCharts(filteredData, categories, office, floor);
             },
             error: function (err) {
                 console.error('Error fetching data:', err);
@@ -126,26 +123,23 @@ $(document).ready(function () {
         });
     }
 
-    function generateCategoryCharts(data, categories) {
+    function generateCategoryCharts(data, categories, office = '', floor = '') {
+        const chartTitle = office && floor ? `${office} - Floor ${floor}` :
+            office ? `${office}` : "WASHROOM";
 
         categories.forEach(category => {
             const categoryData = data.filter(item => item.category === category);
-
-            // Group data by ratings (1-5)
-            const ratingCounts = [1, 2, 3, 4, 5].map(rating => {
-                return categoryData.filter(item => item.rating === rating).length;
-            });
+            const ratingCounts = [1, 2, 3, 4, 5].map(rating => categoryData.filter(item => item.rating === rating).length);
+            const canvasId = `chart-${category}`;
 
             // Create a new canvas for the category chart
-            const canvasId = `chart-${category}`;
-            container.append(`<div class="col-xs-12 col-sm-12 col-md-4">
-                <h4>${category} </h4>
-                <span>${categoryData.length} Total Ratings</span>
-                <canvas id="${canvasId}"></canvas>
-            </div>`);
-
-            // Generate random colors for the bars
-            const barColors = generateRandomColors(5);
+            container.append(`
+                <div class="col-md-4">
+                    <h4>${chartTitle}</h4>
+                    <span>${categoryData.length} Total Ratings</span>
+                    <canvas id="${canvasId}"></canvas>
+                </div>
+            `);
 
             // Create the chart
             // set chart size
@@ -154,61 +148,81 @@ $(document).ready(function () {
                 data: {
                     labels: ['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars'],
                     datasets: [{
-                        label: `Rating Distribution for ${category}`,
-                        data: ratingCounts,
-                        backgroundColor: barColors,
-                        borderColor: barColors.map(color => color.replace('0.5', '1')),
+                        label: `Ratings for ${category}`,
+                        data: ratingCounts, backgroundColor: [
+                            "rgba(240, 89, 48, 0.5)",
+                            "rgba(245, 146, 75, 0.5)",
+                            "rgba(255, 201, 0, 0.5)",
+                            "rgba(168, 212, 0, 0.5)",
+                            "rgba(90, 191, 0, 0.5)"
+                        ],
+                        borderColor: ["#f05930", "#f5924b", "#ffc900", "#a8d400", "#5abf00"],
                         borderWidth: 1
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        datalabels: {
-                            anchor: 'end',
-                            align: 'start',
-                            color: '#000',
-                            font: {
-                                weight: 'bold'
-                            }
-                        }
-                    }
+                    scales: { y: { beginAtZero: true } },
+                    plugins: { legend: { display: false } }
                 }
             });
 
-            // Set the canvas size
-            document.getElementById(canvasId).style.maxHeight = '200px';
-            document.getElementById(canvasId).style.maxWidth = '300px';
+            Object.assign(document.getElementById(canvasId).style, {
+                maxHeight: '250px', minHeight: '200px', maxWidth: '350px', minWidth: '250px'
+            });
+        });
+    }
 
-            document.getElementById(canvasId).style.minHeight = '200px';
-            document.getElementById(canvasId).style.minWidth = '200px';
+    // Load Office and Floor filters
+    function loadOfficeFloorFilters() {
+        $.ajax({
+            url: 'ratings-data.php',
+            method: 'GET',
+            success: function (response) {
+                const data = response;
 
+                const uniqueOffices = [...new Set(data.map(item => item.office))];
+                const officeFilter = $('#office-filter');
+                officeFilter.empty().append('<option value="">All Offices</option>');
+                uniqueOffices.forEach(office => {
+                    officeFilter.append(`<option value="${office}">${office}</option>`);
+                });
+
+                officeFilter.change(function () {
+                    const selectedOffice = $(this).val();
+                    const uniqueFloors = [...new Set(data.filter(item => item.office === selectedOffice).map(item => item.floor))];
+                    const floorFilter = $('#floor-filter');
+                    floorFilter.empty().append('<option value="">All Floors</option>');
+                    uniqueFloors.forEach(floor => {
+                        floorFilter.append(`<option value="${floor}">${floor}</option>`);
+                    });
+
+                    const startDate = $('#date-start').val();
+                    const endDate = $('#date-end').val();
+                    updateChart($('#category-filter').val(), startDate, endDate, selectedOffice, '');
+                });
+
+                $('#floor-filter').change(function () {
+                    const startDate = $('#date-start').val();
+                    const endDate = $('#date-end').val();
+                    updateChart($('#category-filter').val(), startDate, endDate, $('#office-filter').val(), $(this).val());
+                });
+            },
+            error: function (err) {
+                console.error('Error fetching office and floor data:', err);
+            }
         });
     }
 
     // Event listeners for filters
-    $('#category-filter').change(function () {
-        const category = $(this).val();
-        const date = $('#date-filter').val();
-        updateChart(category, date);
+    $('#date-start, #date-end').change(() => {
+        const startDate = $('#date-start').val();
+        const endDate = $('#date-end').val();
+        updateChart($('#category-filter').val(), startDate, endDate, $('#office-filter').val(), $('#floor-filter').val());
     });
 
-    $('#date-filter').change(function () {
-        const category = $('#category-filter').val();
-        const date = $(this).val();
-        updateChart(category, date);
-    });
-
-    // Initial chart load
+    loadOfficeFloorFilters();
     updateChart();
 
 

@@ -2,7 +2,7 @@
 
 require 'google.php';
 
-$range = 'Sheet1!A2:C'; // Columns: Category, Rating, Timestamp
+$range = 'Sheet1!A2:J'; // Columns: Category, Rating, Timestamp
 
 try {
     // Initialize Google Client
@@ -21,11 +21,13 @@ try {
     // Process rows into JSON format
     $data = [];
     foreach ($values as $row) {
-        if (isset($row[0], $row[1], $row[2])) {
+        if (isset($row[0], $row[1], $row[2], $row[5], $row[7])) {
             $data[] = [
                 'category' => $row[0],
-                'rating' => (int) $row[1],
-                'timestamp' => date('Y-m-d', strtotime($row[2]))
+                'floor' => $row[1],
+                'office' => $row[2],
+                'rating' => (int) $row[5],
+                'timestamp' => date('Y-m-d', strtotime($row[7]))
             ];
         }
     }

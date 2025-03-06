@@ -8238,6 +8238,33 @@ class Compute extends \Google\Service
                   'type' => 'string',
                 ],
               ],
+            ],'addPacketMirroringRule' => [
+              'path' => 'projects/{project}/global/firewallPolicies/{firewallPolicy}/addPacketMirroringRule',
+              'httpMethod' => 'POST',
+              'parameters' => [
+                'project' => [
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ],
+                'firewallPolicy' => [
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ],
+                'maxPriority' => [
+                  'location' => 'query',
+                  'type' => 'integer',
+                ],
+                'minPriority' => [
+                  'location' => 'query',
+                  'type' => 'integer',
+                ],
+                'requestId' => [
+                  'location' => 'query',
+                  'type' => 'string',
+                ],
+              ],
             ],'addRule' => [
               'path' => 'projects/{project}/global/firewallPolicies/{firewallPolicy}/addRule',
               'httpMethod' => 'POST',
@@ -8261,6 +8288,44 @@ class Compute extends \Google\Service
                   'type' => 'integer',
                 ],
                 'requestId' => [
+                  'location' => 'query',
+                  'type' => 'string',
+                ],
+              ],
+            ],'aggregatedList' => [
+              'path' => 'projects/{project}/aggregated/firewallPolicies',
+              'httpMethod' => 'GET',
+              'parameters' => [
+                'project' => [
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ],
+                'filter' => [
+                  'location' => 'query',
+                  'type' => 'string',
+                ],
+                'includeAllScopes' => [
+                  'location' => 'query',
+                  'type' => 'boolean',
+                ],
+                'maxResults' => [
+                  'location' => 'query',
+                  'type' => 'integer',
+                ],
+                'orderBy' => [
+                  'location' => 'query',
+                  'type' => 'string',
+                ],
+                'pageToken' => [
+                  'location' => 'query',
+                  'type' => 'string',
+                ],
+                'returnPartialSuccess' => [
+                  'location' => 'query',
+                  'type' => 'boolean',
+                ],
+                'serviceProjectNumber' => [
                   'location' => 'query',
                   'type' => 'string',
                 ],
@@ -8360,6 +8425,25 @@ class Compute extends \Google\Service
                   'type' => 'integer',
                 ],
               ],
+            ],'getPacketMirroringRule' => [
+              'path' => 'projects/{project}/global/firewallPolicies/{firewallPolicy}/getPacketMirroringRule',
+              'httpMethod' => 'GET',
+              'parameters' => [
+                'project' => [
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ],
+                'firewallPolicy' => [
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ],
+                'priority' => [
+                  'location' => 'query',
+                  'type' => 'integer',
+                ],
+              ],
             ],'getRule' => [
               'path' => 'projects/{project}/global/firewallPolicies/{firewallPolicy}/getRule',
               'httpMethod' => 'GET',
@@ -8442,6 +8526,29 @@ class Compute extends \Google\Service
                   'type' => 'string',
                 ],
               ],
+            ],'patchPacketMirroringRule' => [
+              'path' => 'projects/{project}/global/firewallPolicies/{firewallPolicy}/patchPacketMirroringRule',
+              'httpMethod' => 'POST',
+              'parameters' => [
+                'project' => [
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ],
+                'firewallPolicy' => [
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ],
+                'priority' => [
+                  'location' => 'query',
+                  'type' => 'integer',
+                ],
+                'requestId' => [
+                  'location' => 'query',
+                  'type' => 'string',
+                ],
+              ],
             ],'patchRule' => [
               'path' => 'projects/{project}/global/firewallPolicies/{firewallPolicy}/patchRule',
               'httpMethod' => 'POST',
@@ -8482,6 +8589,29 @@ class Compute extends \Google\Service
                 'name' => [
                   'location' => 'query',
                   'type' => 'string',
+                ],
+                'requestId' => [
+                  'location' => 'query',
+                  'type' => 'string',
+                ],
+              ],
+            ],'removePacketMirroringRule' => [
+              'path' => 'projects/{project}/global/firewallPolicies/{firewallPolicy}/removePacketMirroringRule',
+              'httpMethod' => 'POST',
+              'parameters' => [
+                'project' => [
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ],
+                'firewallPolicy' => [
+                  'location' => 'path',
+                  'type' => 'string',
+                  'required' => true,
+                ],
+                'priority' => [
+                  'location' => 'query',
+                  'type' => 'integer',
                 ],
                 'requestId' => [
                   'location' => 'query',

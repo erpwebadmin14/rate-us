@@ -7,5 +7,10 @@
     },
     "require": {
         "google/apiclient": "^2.18"
+    },
+    "config": {
+        "platform": {
+            "php": "8.0"
+        }
     }
 }

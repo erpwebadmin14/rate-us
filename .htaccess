@@ -1,0 +1,7 @@
+
+Options +FollowSymLinks
+RewriteEngine On
+
+RewriteRule ^/?result$ result.php
+RewriteRule ^/?google$ google.php
+RewriteRule ^/?rating_data$ ratings-data.php

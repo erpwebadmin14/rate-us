@@ -42,11 +42,11 @@ if($gender = 'F'){
 }
 
 if($type = 'E'){
-    $type = 'Employees CR';
+    $type = 'Employee';
 } elseif ($type = 'C') {
-    $type = 'Clients CR';
+    $type = 'Client';
 } elseif ($type = 'V'){
-    $type = 'Visitors CR';
+    $type = 'Visitor';
 } 
 
 $newRow = [

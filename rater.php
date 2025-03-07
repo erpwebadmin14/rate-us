@@ -7,7 +7,7 @@ $category = 'Default';
 if (!empty(trim($_POST['c'])))
     $category = strtoupper($_POST['c']); 
 
-$floor = (int) $_POST['f'];
+$floor = $_POST['f'];
 $office = $_POST['o'];
 $gender = $_POST['g'];
 $type = $_POST['t'];
@@ -68,7 +68,8 @@ try {
         'values' => $newRow
     ]);
     $params = [
-        'valueInputOption' => 'RAW' // or 'USER_ENTERED'
+        // 'valueInputOption' => 'RAW' // or 'USER_ENTERED'
+        'valueInputOption' => 'USER_ENTERED'
     ];
 
     // Append data to the sheet
